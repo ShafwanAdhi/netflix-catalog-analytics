@@ -1,13 +1,18 @@
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
+import { DATA_COLORS } from "../../lib/dataColors";
+import { DataLegend } from "../../components/DataLegend";
 import {
   Bar,
   BarChart,
   CartesianGrid,
+  Cell,
+  Legend,
   ResponsiveContainer,
   Scatter,
   ScatterChart,
+  Symbols,
   Tooltip,
   XAxis,
   YAxis,
@@ -105,7 +110,7 @@ export function AnalyticsOverview() {
               <Bar
                 dataKey="count"
                 name="Eligible titles"
-                fill="#000000"
+                fill={DATA_COLORS.distribution}
                 isAnimationActive={false}
               />
             </BarChart>
@@ -531,12 +536,29 @@ export function AnalyticsInsightsPage() {
                   <Bar
                     dataKey="median_years"
                     name="Median years"
-                    fill="#000000"
                     isAnimationActive={false}
-                  />
+                  >
+                    {rows.map((row) => (
+                      <Cell
+                        key={`${row.name}-${row.content_type}`}
+                        fill={
+                          row.content_type === "Movie"
+                            ? DATA_COLORS.movie
+                            : DATA_COLORS.tv
+                        }
+                      />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>
+            <DataLegend
+              label="Content type colors"
+              items={[
+                { label: "Movie (M)", color: DATA_COLORS.movie },
+                { label: "TV Show (TV)", color: DATA_COLORS.tv },
+              ]}
+            />
           </section>
         );
       })}
@@ -729,9 +751,31 @@ export function AnalyticsEvaluation() {
                 stroke="#000"
                 strokeDasharray="4 4"
               />
+              <Legend wrapperStyle={{ fontSize: 12 }} />
               <Scatter
-                data={data.test_points}
-                fill="#000000"
+                name="Underestimate"
+                data={data.test_points.filter((p) => p.predicted < p.lag_years)}
+                fill={DATA_COLORS.under}
+                shape={<Symbols type="triangle" />}
+                legendType="triangle"
+                isAnimationActive={false}
+              />
+              <Scatter
+                name="Overestimate"
+                data={data.test_points.filter((p) => p.predicted > p.lag_years)}
+                fill={DATA_COLORS.over}
+                shape={<Symbols type="circle" />}
+                legendType="circle"
+                isAnimationActive={false}
+              />
+              <Scatter
+                name="Exact match"
+                data={data.test_points.filter(
+                  (p) => p.predicted === p.lag_years,
+                )}
+                fill={DATA_COLORS.exact}
+                shape={<Symbols type="cross" />}
+                legendType="cross"
                 isAnimationActive={false}
               />
             </ScatterChart>

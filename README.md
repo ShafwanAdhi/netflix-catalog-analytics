@@ -5,7 +5,7 @@ Standalone Task 6 internship application. This repository contains only this tas
 ## Status
 
 - Implemented: task workspace, About Dataset, audited variable rationale, actual preparation/split/segment outcomes, model evaluation and interactive results.
-- Interface: responsive RawBlock layout with self-hosted fonts and monochrome charts; see [verification and screenshots](docs/VERIFICATION.md).
+- Interface: responsive RawBlock layout with self-hosted fonts and semantic chart colors and labelled legends; see [verification and screenshots](docs/VERIFICATION.md).
 - Repository: independent application, model artifacts and verification workflow.
 - Active model run: `20261106T131312231321Z`. See `artifacts/task-06/active.json` for the current run.
 
@@ -57,3 +57,5 @@ Training creates a new immutable run; regenerate the dataset profile whenever ac
 - [Task evidence and provenance](docs/tasks/task-06/)
 
 Independent educational project; not affiliated with Netflix. This is a historical 2021 catalog snapshot, not a current data service. Models describe metadata associations, not causation. Raw-data redistribution rights are not assumed.
+
+Data visualization: [semantic colors and accessibility](docs/architecture/data-visualization.md).
