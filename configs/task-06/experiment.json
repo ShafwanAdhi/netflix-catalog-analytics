@@ -1,0 +1,13 @@
+{
+  "source_sha256": "90b02beeb554921f81d3b9a774d0f7766f6a65240162565f6b4082165dc2a1d3",
+  "seed": 42,
+  "training_end": 2019,
+  "cv_years": [2017, 2018, 2019],
+  "ridge_alpha": [0.1, 1, 10, 100],
+  "forest_depth": [10, null],
+  "forest_min_leaf": [2, 10],
+  "forest_trees": 200,
+  "minimum_support": 30,
+  "permutation_repeats": 3,
+  "selection": "lowest mean chronological CV MAE in years, then RMSE, then declared candidate order"
+}

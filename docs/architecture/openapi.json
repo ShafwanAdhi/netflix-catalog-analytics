@@ -1,0 +1,1177 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Historical Catalog Entry Analytics",
+    "version": "2.0.0"
+  },
+  "paths": {
+    "/api/v1/dataset": {
+      "get": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Dataset",
+        "operationId": "dataset_api_v1_dataset_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tasks/6/results": {
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "summary": "Results",
+        "operationId": "results_api_v1_tasks_6_results_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyticsResults"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tasks/6/insights": {
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "summary": "Insights",
+        "operationId": "insights_api_v1_tasks_6_insights_get",
+        "parameters": [
+          {
+            "name": "group",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "all",
+                "movies",
+                "tv"
+              ],
+              "type": "string",
+              "default": "all",
+              "title": "Group"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyticsInsights"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tasks/6/predict": {
+      "post": {
+        "tags": [
+          "Analytics"
+        ],
+        "summary": "Predict",
+        "operationId": "predict_api_v1_tasks_6_predict_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyticsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyticsPrediction"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/health": {
+      "get": {
+        "summary": "Health",
+        "operationId": "health_api_v1_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tasks": {
+      "get": {
+        "summary": "Tasks",
+        "operationId": "tasks_api_v1_tasks_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnalyticsAudit": {
+        "properties": {
+          "source_sha256": {
+            "type": "string",
+            "title": "Source Sha256"
+          },
+          "raw_rows": {
+            "type": "integer",
+            "title": "Raw Rows"
+          },
+          "entity_rows": {
+            "type": "integer",
+            "title": "Entity Rows"
+          },
+          "eligible_rows": {
+            "type": "integer",
+            "title": "Eligible Rows"
+          },
+          "duplicate_mapping": {
+            "items": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Duplicate Mapping"
+          },
+          "snapshot_date": {
+            "type": "string",
+            "title": "Snapshot Date"
+          },
+          "anomalies": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Anomalies"
+          },
+          "train_rows": {
+            "type": "integer",
+            "title": "Train Rows"
+          },
+          "test_rows": {
+            "type": "integer",
+            "title": "Test Rows"
+          },
+          "missing_country": {
+            "type": "integer",
+            "title": "Missing Country"
+          },
+          "missing_director": {
+            "type": "integer",
+            "title": "Missing Director"
+          },
+          "policy": {
+            "type": "string",
+            "title": "Policy"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source_sha256",
+          "raw_rows",
+          "entity_rows",
+          "eligible_rows",
+          "duplicate_mapping",
+          "snapshot_date",
+          "anomalies",
+          "train_rows",
+          "test_rows",
+          "missing_country",
+          "missing_director",
+          "policy"
+        ],
+        "title": "AnalyticsAudit"
+      },
+      "AnalyticsCandidate": {
+        "properties": {
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "feature_set": {
+            "type": "string",
+            "title": "Feature Set"
+          },
+          "cv_mae": {
+            "type": "number",
+            "title": "Cv Mae"
+          },
+          "cv_rmse": {
+            "type": "number",
+            "title": "Cv Rmse"
+          },
+          "folds": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Folds"
+          },
+          "test_metrics": {
+            "$ref": "#/components/schemas/RegressionMetrics"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model",
+          "feature_set",
+          "cv_mae",
+          "cv_rmse",
+          "folds",
+          "test_metrics"
+        ],
+        "title": "AnalyticsCandidate"
+      },
+      "AnalyticsImportance": {
+        "properties": {
+          "block": {
+            "type": "string",
+            "title": "Block"
+          },
+          "mae_increase": {
+            "type": "number",
+            "title": "Mae Increase"
+          },
+          "std": {
+            "type": "number",
+            "title": "Std"
+          },
+          "repeats": {
+            "type": "integer",
+            "title": "Repeats"
+          }
+        },
+        "type": "object",
+        "required": [
+          "block",
+          "mae_increase",
+          "std",
+          "repeats"
+        ],
+        "title": "AnalyticsImportance"
+      },
+      "AnalyticsInsights": {
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "group": {
+            "type": "string",
+            "enum": [
+              "all",
+              "movies",
+              "tv"
+            ],
+            "title": "Group"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CatalogInsight"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "quality": {
+            "$ref": "#/components/schemas/AnalyticsQuality"
+          }
+        },
+        "type": "object",
+        "required": [
+          "run_id",
+          "group",
+          "items",
+          "quality"
+        ],
+        "title": "AnalyticsInsights"
+      },
+      "AnalyticsPoint": {
+        "properties": {
+          "show_id": {
+            "type": "string",
+            "title": "Show Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "added_year": {
+            "type": "integer",
+            "title": "Added Year"
+          },
+          "lag_years": {
+            "type": "number",
+            "title": "Lag Years"
+          },
+          "predicted": {
+            "type": "number",
+            "title": "Predicted"
+          },
+          "absolute_error": {
+            "type": "number",
+            "title": "Absolute Error"
+          }
+        },
+        "type": "object",
+        "required": [
+          "show_id",
+          "title",
+          "type",
+          "added_year",
+          "lag_years",
+          "predicted",
+          "absolute_error"
+        ],
+        "title": "AnalyticsPoint"
+      },
+      "AnalyticsPrediction": {
+        "properties": {
+          "estimated_years": {
+            "type": "number",
+            "title": "Estimated Years"
+          },
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "model_id": {
+            "type": "string",
+            "title": "Model Id"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "scope": {
+            "type": "string",
+            "title": "Scope"
+          }
+        },
+        "type": "object",
+        "required": [
+          "estimated_years",
+          "run_id",
+          "model_id",
+          "warnings",
+          "scope"
+        ],
+        "title": "AnalyticsPrediction"
+      },
+      "AnalyticsQuality": {
+        "properties": {
+          "support": {
+            "type": "integer",
+            "title": "Support"
+          },
+          "reference": {
+            "type": "string",
+            "title": "Reference"
+          },
+          "mae_difference": {
+            "type": "number",
+            "title": "Mae Difference"
+          },
+          "baseline_mae": {
+            "type": "number",
+            "title": "Baseline Mae"
+          },
+          "model_mae": {
+            "type": "number",
+            "title": "Model Mae"
+          },
+          "worst_cohort": {
+            "$ref": "#/components/schemas/ErrorCohort"
+          },
+          "limitation": {
+            "type": "string",
+            "title": "Limitation"
+          }
+        },
+        "type": "object",
+        "required": [
+          "support",
+          "reference",
+          "mae_difference",
+          "baseline_mae",
+          "model_mae",
+          "worst_cohort",
+          "limitation"
+        ],
+        "title": "AnalyticsQuality"
+      },
+      "AnalyticsRequest": {
+        "properties": {
+          "content_type": {
+            "type": "string",
+            "enum": [
+              "Movie",
+              "TV Show"
+            ],
+            "title": "Content Type"
+          },
+          "countries": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 30,
+            "title": "Countries"
+          },
+          "genres": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 50,
+            "minItems": 1,
+            "title": "Genres"
+          },
+          "director": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Director"
+          },
+          "duration": {
+            "$ref": "#/components/schemas/Duration"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "content_type",
+          "countries",
+          "genres",
+          "duration"
+        ],
+        "title": "AnalyticsRequest"
+      },
+      "AnalyticsResults": {
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "model_id": {
+            "type": "string",
+            "title": "Model Id"
+          },
+          "feature_set": {
+            "type": "string",
+            "title": "Feature Set"
+          },
+          "selected_at": {
+            "type": "string",
+            "title": "Selected At"
+          },
+          "evaluated_at": {
+            "type": "string",
+            "title": "Evaluated At"
+          },
+          "audit": {
+            "$ref": "#/components/schemas/AnalyticsAudit"
+          },
+          "comparison": {
+            "items": {
+              "$ref": "#/components/schemas/AnalyticsCandidate"
+            },
+            "type": "array",
+            "title": "Comparison"
+          },
+          "metrics": {
+            "$ref": "#/components/schemas/RegressionMetrics"
+          },
+          "summary": {
+            "items": {
+              "$ref": "#/components/schemas/AnalyticsSummary"
+            },
+            "type": "array",
+            "title": "Summary"
+          },
+          "distribution": {
+            "items": {
+              "$ref": "#/components/schemas/LagBin"
+            },
+            "type": "array",
+            "title": "Distribution"
+          },
+          "breakdown": {
+            "items": {
+              "$ref": "#/components/schemas/CatalogInsight"
+            },
+            "type": "array",
+            "title": "Breakdown"
+          },
+          "insights": {
+            "additionalProperties": {
+              "items": {
+                "$ref": "#/components/schemas/CatalogInsight"
+              },
+              "type": "array"
+            },
+            "type": "object",
+            "title": "Insights"
+          },
+          "errors": {
+            "items": {
+              "$ref": "#/components/schemas/ErrorCohort"
+            },
+            "type": "array",
+            "title": "Errors"
+          },
+          "importance": {
+            "items": {
+              "$ref": "#/components/schemas/AnalyticsImportance"
+            },
+            "type": "array",
+            "title": "Importance"
+          },
+          "quality": {
+            "$ref": "#/components/schemas/AnalyticsQuality"
+          },
+          "test_points": {
+            "items": {
+              "$ref": "#/components/schemas/AnalyticsPoint"
+            },
+            "type": "array",
+            "title": "Test Points"
+          },
+          "countries": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Countries"
+          },
+          "genres": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Genres"
+          }
+        },
+        "type": "object",
+        "required": [
+          "run_id",
+          "model_id",
+          "feature_set",
+          "selected_at",
+          "evaluated_at",
+          "audit",
+          "comparison",
+          "metrics",
+          "summary",
+          "distribution",
+          "breakdown",
+          "insights",
+          "errors",
+          "importance",
+          "quality",
+          "test_points",
+          "countries",
+          "genres"
+        ],
+        "title": "AnalyticsResults"
+      },
+      "AnalyticsSummary": {
+        "properties": {
+          "group": {
+            "type": "string",
+            "title": "Group"
+          },
+          "support": {
+            "type": "integer",
+            "title": "Support"
+          },
+          "median_years": {
+            "type": "number",
+            "title": "Median Years"
+          },
+          "mean_years": {
+            "type": "number",
+            "title": "Mean Years"
+          },
+          "same_year_share": {
+            "type": "number",
+            "title": "Same Year Share"
+          }
+        },
+        "type": "object",
+        "required": [
+          "group",
+          "support",
+          "median_years",
+          "mean_years",
+          "same_year_share"
+        ],
+        "title": "AnalyticsSummary"
+      },
+      "CatalogInsight": {
+        "properties": {
+          "content_type": {
+            "type": "string",
+            "title": "Content Type"
+          },
+          "field": {
+            "type": "string",
+            "title": "Field"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "support": {
+            "type": "integer",
+            "title": "Support"
+          },
+          "reference_support": {
+            "type": "integer",
+            "title": "Reference Support"
+          },
+          "reference": {
+            "type": "string",
+            "title": "Reference"
+          },
+          "median_years": {
+            "type": "number",
+            "title": "Median Years"
+          },
+          "reference_median": {
+            "type": "number",
+            "title": "Reference Median"
+          },
+          "difference": {
+            "type": "number",
+            "title": "Difference"
+          },
+          "supported": {
+            "type": "boolean",
+            "title": "Supported"
+          },
+          "direction": {
+            "type": "string",
+            "title": "Direction"
+          },
+          "limitation": {
+            "type": "string",
+            "title": "Limitation"
+          }
+        },
+        "type": "object",
+        "required": [
+          "content_type",
+          "field",
+          "name",
+          "support",
+          "reference_support",
+          "reference",
+          "median_years",
+          "reference_median",
+          "difference",
+          "supported",
+          "direction",
+          "limitation"
+        ],
+        "title": "CatalogInsight"
+      },
+      "DatasetInfo": {
+        "properties": {
+          "task_id": {
+            "type": "integer",
+            "title": "Task Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "source_file": {
+            "type": "string",
+            "title": "Source File"
+          },
+          "source_sha256": {
+            "type": "string",
+            "title": "Source Sha256"
+          },
+          "snapshot_date": {
+            "type": "string",
+            "title": "Snapshot Date"
+          },
+          "raw_rows": {
+            "type": "integer",
+            "title": "Raw Rows"
+          },
+          "variables": {
+            "items": {
+              "$ref": "#/components/schemas/Variable"
+            },
+            "type": "array",
+            "title": "Variables"
+          },
+          "decisions": {
+            "items": {
+              "$ref": "#/components/schemas/Decision"
+            },
+            "type": "array",
+            "title": "Decisions"
+          },
+          "stages": {
+            "items": {
+              "$ref": "#/components/schemas/Stage"
+            },
+            "type": "array",
+            "title": "Stages"
+          },
+          "partitions": {
+            "items": {
+              "$ref": "#/components/schemas/Partition"
+            },
+            "type": "array",
+            "title": "Partitions"
+          },
+          "split_strategy": {
+            "type": "string",
+            "title": "Split Strategy"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Limitations"
+          }
+        },
+        "type": "object",
+        "required": [
+          "task_id",
+          "title",
+          "run_id",
+          "source_file",
+          "source_sha256",
+          "snapshot_date",
+          "raw_rows",
+          "variables",
+          "decisions",
+          "stages",
+          "partitions",
+          "split_strategy",
+          "limitations"
+        ],
+        "title": "DatasetInfo"
+      },
+      "Decision": {
+        "properties": {
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "evidence": {
+            "type": "string",
+            "title": "Evidence"
+          },
+          "limitation": {
+            "type": "string",
+            "title": "Limitation"
+          }
+        },
+        "type": "object",
+        "required": [
+          "action",
+          "reason",
+          "evidence",
+          "limitation"
+        ],
+        "title": "Decision"
+      },
+      "Duration": {
+        "properties": {
+          "value": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Value"
+          },
+          "unit": {
+            "type": "string",
+            "enum": [
+              "minutes",
+              "seasons"
+            ],
+            "title": "Unit"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "value",
+          "unit"
+        ],
+        "title": "Duration"
+      },
+      "ErrorCohort": {
+        "properties": {
+          "mae": {
+            "type": "number",
+            "title": "Mae"
+          },
+          "rmse": {
+            "type": "number",
+            "title": "Rmse"
+          },
+          "median_absolute_error": {
+            "type": "number",
+            "title": "Median Absolute Error"
+          },
+          "r2": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "R2"
+          },
+          "field": {
+            "type": "string",
+            "title": "Field"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "support": {
+            "type": "integer",
+            "title": "Support"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mae",
+          "rmse",
+          "median_absolute_error",
+          "r2",
+          "field",
+          "name",
+          "support"
+        ],
+        "title": "ErrorCohort"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "LagBin": {
+        "properties": {
+          "years": {
+            "type": "integer",
+            "title": "Years"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "years",
+          "count"
+        ],
+        "title": "LagBin"
+      },
+      "Partition": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "rows": {
+            "type": "integer",
+            "title": "Rows"
+          },
+          "purpose": {
+            "type": "string",
+            "title": "Purpose"
+          },
+          "segments": {
+            "items": {
+              "$ref": "#/components/schemas/Segment"
+            },
+            "type": "array",
+            "title": "Segments"
+          },
+          "metrics": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "object",
+            "title": "Metrics"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "rows",
+          "purpose",
+          "segments",
+          "metrics"
+        ],
+        "title": "Partition"
+      },
+      "RegressionMetrics": {
+        "properties": {
+          "mae": {
+            "type": "number",
+            "title": "Mae"
+          },
+          "rmse": {
+            "type": "number",
+            "title": "Rmse"
+          },
+          "median_absolute_error": {
+            "type": "number",
+            "title": "Median Absolute Error"
+          },
+          "r2": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "R2"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mae",
+          "rmse",
+          "median_absolute_error",
+          "r2"
+        ],
+        "title": "RegressionMetrics"
+      },
+      "Segment": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "rows": {
+            "type": "integer",
+            "title": "Rows"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "rows"
+        ],
+        "title": "Segment"
+      },
+      "Stage": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "input_rows": {
+            "type": "integer",
+            "title": "Input Rows"
+          },
+          "output_rows": {
+            "type": "integer",
+            "title": "Output Rows"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "input_rows",
+          "output_rows",
+          "reason"
+        ],
+        "title": "Stage"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "Variable": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "treatment": {
+            "type": "string",
+            "title": "Treatment"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "role",
+          "reason",
+          "treatment"
+        ],
+        "title": "Variable"
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+﻿async page => {
+  const checks=[];
+  const check=(ok,label)=>{if(!ok)throw new Error(label);checks.push(label);};
+  await page.setViewportSize({width:1440,height:1000});
+  await page.goto('http://127.0.0.1:8000/insights');
+  await page.locator('.analytics-insights li').first().waitFor();
+  const button=page.getByRole('button',{name:'Estimate year difference'});
+  check(await button.evaluate(e=>getComputedStyle(e).backgroundColor==='rgb(0, 0, 0)'&&getComputedStyle(e).color==='rgb(255, 255, 255)'), 'Primary control is black with white text');
+  await button.hover();
+  await page.waitForTimeout(150);
+  check(await button.evaluate(e=>getComputedStyle(e).backgroundColor==='rgb(255, 255, 255)'&&getComputedStyle(e).color==='rgb(0, 0, 0)'), 'Hover fully inverts primary control');
+  await page.getByRole('spinbutton',{name:'Duration (minutes)'}).fill('100');
+  await page.getByRole('listbox',{name:/^Countries/}).selectOption('United States');
+  await page.getByRole('listbox',{name:'Genres',exact:true}).selectOption('Dramas');
+  let release;
+  const gate=new Promise(resolve=>release=resolve);
+  await page.route('**/api/v1/tasks/6/predict',async route=>{await gate;await route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({detail:'Controlled unavailable prediction'})});});
+  await button.click();
+  await page.getByRole('button',{name:'Estimating…'}).waitFor();
+  check(await page.getByRole('button',{name:'Estimating…'}).evaluate(e=>e.disabled&&getComputedStyle(e).opacity==='1'&&getComputedStyle(e).backgroundColor==='rgb(240, 240, 240)'), 'Pending control is disabled with gray fill and full opacity');
+  release();
+  await page.locator('.analytics-estimate [role="alert"]').waitFor();
+  check(await page.locator('.analytics-estimate .state').evaluate(e=>getComputedStyle(e).color==='rgb(255, 255, 255)'), 'Unavailable state stays readable inside the inverted result panel');
+  await page.getByRole('button',{name:'Try again',exact:true}).focus();
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Shift+Tab');
+  check(await page.getByRole('button',{name:'Try again',exact:true}).evaluate(e=>getComputedStyle(e).outlineStyle==='solid'&&getComputedStyle(e).outlineColor==='rgb(255, 255, 255)'), 'Keyboard focus is white inside the black panel');
+  await page.screenshot({path:'output/playwright/rawblock/task-06/unavailable-state.png',fullPage:true,animations:'disabled'});
+  await page.unroute('**/api/v1/tasks/6/predict');
+  return {passed:true,checks};
+}

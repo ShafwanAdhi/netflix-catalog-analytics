@@ -1,0 +1,173 @@
+{
+  "task_id": 6,
+  "title": "Historical Catalog Entry Analytics",
+  "run_id": "20261106T131312231321Z",
+  "source_file": "User-supplied Dataset.csv (10 source variables)",
+  "source_sha256": "90b02beeb554921f81d3b9a774d0f7766f6a65240162565f6b4082165dc2a1d3",
+  "snapshot_date": "2021-09-25",
+  "raw_rows": 8790,
+  "variables": [
+    {
+      "name": "type",
+      "role": "Feature",
+      "reason": "Movie and TV catalog-entry lags differ; estimate those metadata associations explicitly.",
+      "treatment": "Encode Movie/TV Show; retain separate duration units."
+    },
+    {
+      "name": "country",
+      "role": "Feature",
+      "reason": "Production origins can be associated with historical catalog-entry patterns.",
+      "treatment": "Tokenize multiple countries; fit vocabulary on the fitting data only."
+    },
+    {
+      "name": "listed_in",
+      "role": "Feature",
+      "reason": "Genres may explain variation in observed catalog-entry lags without using target ingredients.",
+      "treatment": "Tokenize multiple genres; unknown categories do not extend the fitted vocabulary."
+    },
+    {
+      "name": "duration",
+      "role": "Feature",
+      "reason": "Film length and season count provide format context independent of release/addition dates.",
+      "treatment": "Parse positive minutes for Movies and integer seasons for TV Shows; never treat them as interchangeable."
+    },
+    {
+      "name": "release_year",
+      "role": "Target construction only",
+      "reason": "Part of the target formula; using it as a predictor would reveal the target.",
+      "treatment": "Excluded from prediction; used only to calculate the calendar-year difference."
+    },
+    {
+      "name": "date_added",
+      "role": "Target construction / split only",
+      "reason": "Measures catalog entry, not original release.",
+      "treatment": "Build target and chronological partitions; excluded from model inputs."
+    },
+    {
+      "name": "rating",
+      "role": "Excluded",
+      "reason": "Advisory ratings are not viewer scores, commercial success or clustering ground truth.",
+      "treatment": "Never used as a model feature or performance label."
+    },
+    {
+      "name": "director",
+      "role": "Feature",
+      "reason": "Director credits and missingness describe content metadata associations.",
+      "treatment": "Director count and missingness indicators only; names do not create a credit vocabulary."
+    },
+    {
+      "name": "show_id / title",
+      "role": "Identity / display only",
+      "reason": "Trace records and remove repeated entities; unique identifiers do not describe generalizable content.",
+      "treatment": "Exclude from features; title/type/year supports entity review."
+    },
+    {
+      "name": "lag_years",
+      "role": "Target",
+      "reason": "Observed calendar-year difference between catalog addition and release, because actual commercial success is unavailable.",
+      "treatment": "year(date_added) - release_year; remove 14 negative values; retain the long tail."
+    }
+  ],
+  "decisions": [
+    {
+      "action": "Use an observable metadata target",
+      "reason": "The dataset has no views, engagement, revenue or viewer score; commercial success cannot be measured.",
+      "evidence": "The target is year(date_added) minus release_year, with explicit input exclusions.",
+      "limitation": "Calendar-year difference is not exact elapsed time, prospective waiting time or success."
+    },
+    {
+      "action": "Exclude target ingredients from predictors",
+      "reason": "release_year and date_added construct the label; including them would leak its value.",
+      "evidence": "Feature allowlist excludes release/addition years, dates, identifiers and target.",
+      "limitation": "Snapshot survivorship and metadata associations prevent causal or current-acquisition claims."
+    }
+  ],
+  "stages": [
+    {
+      "name": "Source validation",
+      "input_rows": 8790,
+      "output_rows": 8790,
+      "reason": "Verify the supplied SHA-256, schema, types and duration units."
+    },
+    {
+      "name": "Entity deduplication",
+      "input_rows": 8790,
+      "output_rows": 8783,
+      "reason": "Remove 7 repeated entities with a recorded mapping."
+    },
+    {
+      "name": "Target eligibility",
+      "input_rows": 8783,
+      "output_rows": 8769,
+      "reason": "Audit and exclude 14 negative calendar-year differences; do not invent corrections or trim the positive tail."
+    }
+  ],
+  "partitions": [
+    {
+      "name": "Training through 2019",
+      "rows": 5395,
+      "purpose": "Chronological training; rolling-year validation fits only earlier observations.",
+      "segments": [],
+      "metrics": {}
+    },
+    {
+      "name": "Test: 2020–2021",
+      "rows": 3374,
+      "purpose": "Untouched later-year test; the serving model remains trained on training rows only.",
+      "segments": [],
+      "metrics": {
+        "mae": 4.361541062290082,
+        "rmse": 8.09728340167425,
+        "median_absolute_error": 1.6586012159347387,
+        "r2": 0.1629328341994455
+      }
+    },
+    {
+      "name": "Eligible catalog segment: movies",
+      "rows": 6119,
+      "purpose": "Descriptive target statistics across the eligible catalog, not held-out prediction errors.",
+      "segments": [],
+      "metrics": {
+        "median_years": 2.0,
+        "mean_years": 5.730348096094133,
+        "same_year_share": 0.30364438633763685
+      }
+    },
+    {
+      "name": "Eligible catalog segment: tv",
+      "rows": 2650,
+      "purpose": "Descriptive target statistics across the eligible catalog, not held-out prediction errors.",
+      "segments": [],
+      "metrics": {
+        "median_years": 0.0,
+        "mean_years": 2.3147169811320754,
+        "same_year_share": 0.520377358490566
+      }
+    },
+    {
+      "name": "Held-out test segment: Movie",
+      "rows": 2277,
+      "purpose": "Computed from frozen test_predictions.csv; errors measured in calendar years.",
+      "segments": [],
+      "metrics": {
+        "mae": 5.405557338982578,
+        "median_absolute_error": 2.2401164568457483
+      }
+    },
+    {
+      "name": "Held-out test segment: TV Show",
+      "rows": 1097,
+      "purpose": "Computed from frozen test_predictions.csv; errors measured in calendar years.",
+      "segments": [],
+      "metrics": {
+        "mae": 2.194517304743308,
+        "median_absolute_error": 1.0967946638071324
+      }
+    }
+  ],
+  "split_strategy": "Chronological regression: 5,395 training through 2019 / 3,374 test in 2020–2021, from 8,769 eligible entities. Group-wise errors remain visible.",
+  "limitations": [
+    "This is the supplied historical catalog snapshot, not a current Netflix data feed.",
+    "Decisions are concise, evidence-backed summaries; model outputs do not establish causation."
+  ]
+}

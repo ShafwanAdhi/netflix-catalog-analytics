@@ -1,0 +1,6 @@
+run_id,group,content_type,field,name,support,reference_support,median_years,reference_median,difference,limitation
+"20261106T131312231321Z","movies","Movie","genre","Classic Movies","116","6119","44","2","42","Snapshot association only; overlapping labels and catalog survivorship prevent causal or demand claims."
+"20261106T131312231321Z","movies","Movie","genre","Cult Movies","70","6119","25","2","23","Snapshot association only; overlapping labels and catalog survivorship prevent causal or demand claims."
+"20261106T131312231321Z","movies","Movie","country","Hong Kong","75","6119","12","2","10","Snapshot association only; overlapping labels and catalog survivorship prevent causal or demand claims."
+"20261106T131312231321Z","movies","Movie","country","Egypt","109","6119","7","2","5","Snapshot association only; overlapping labels and catalog survivorship prevent causal or demand claims."
+"20261106T131312231321Z","movies","Movie","country","Thailand","42","6119","4.5","2","2.5","Snapshot association only; overlapping labels and catalog survivorship prevent causal or demand claims."
