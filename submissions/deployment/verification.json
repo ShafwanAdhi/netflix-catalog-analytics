@@ -1,0 +1,19 @@
+{
+  "verified_source_commit": "ab1a5354859bd477aead971d1a9e2f03038e749b",
+  "task_id": 6,
+  "domain": "netflix-catalog-analytics.shafwan.digital",
+  "verified_at": "2026-11-07T11:46:56Z",
+  "checks": [
+    {
+      "name": "Verify standalone task",
+      "conclusion": "success",
+      "url": "https://github.com/ShafwanAdhi/netflix-catalog-analytics/actions/runs/42369439639"
+    },
+    {
+      "name": "Container verification",
+      "conclusion": "success",
+      "url": "https://github.com/ShafwanAdhi/netflix-catalog-analytics/actions/runs/42369439641"
+    }
+  ],
+  "scope": "Linux CI Docker build, Nginx syntax, read-only/resource-limited container readiness and localhost SPA/API smoke checks. VPS application deployment and HTTPS issuance remain pending."
+}
