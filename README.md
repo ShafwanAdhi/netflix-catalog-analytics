@@ -48,6 +48,7 @@ Training creates a new immutable run; regenerate the dataset profile whenever ac
 - `artifacts/task-06`: one selected run, checksums and active pointer.
 - `reports/dataset-profile.json`: run-bound source, variables, decisions and intermediate outcomes.
 - [Standalone verification](docs/VERIFICATION.md)
+- [Docker / VPS deployment](docs/DEPLOYMENT.md)
 - [Architecture and deployment](docs/ARCHITECTURE.md)
 - [Task evidence and provenance](docs/tasks/task-06/)
 
