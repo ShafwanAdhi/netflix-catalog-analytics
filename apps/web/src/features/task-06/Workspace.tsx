@@ -380,6 +380,9 @@ function EstimateForm({ data }: { data: AnalyticsResults }) {
         </form>
         <div
           className="analytics-estimate"
+          data-motion-revision={
+            mutation.isSuccess ? mutation.submittedAt : undefined
+          }
           aria-live="polite"
           aria-busy={mutation.isPending}
         >

@@ -1,3 +1,4 @@
+import { useWorkspaceMotion } from "./useWorkspaceMotion";
 import {
   NavLink,
   Navigate,
@@ -16,6 +17,7 @@ import {
 
 export function App() {
   const location = useLocation();
+  const mainRef = useWorkspaceMotion(location.pathname);
   return (
     <>
       <a href="#main" className="skip-link">
@@ -55,6 +57,7 @@ export function App() {
           ))}
         </nav>
         <main
+          ref={mainRef}
           id="main"
           tabIndex={-1}
           key={location.pathname}
