@@ -11,6 +11,10 @@ Standalone Task 6 internship application. This repository contains only this tas
 
 - Motion: staged page/scroll reveals, chart and result transitions, hover/press feedback, and live reduced-motion support.
 
+## Live application
+
+[Open Task 6](https://netflix-catalog-analytics.shafwan.digital) ? deployed with Docker, Nginx and HTTPS. [Production verification](submissions/deployment/production/verification.json).
+
 ## Quickstart
 
 Install Node 24, Python 3.11, Git and uv. In this repository's root:
