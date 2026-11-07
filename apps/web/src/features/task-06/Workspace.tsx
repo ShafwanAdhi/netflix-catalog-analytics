@@ -515,43 +515,50 @@ export function AnalyticsInsightsPage() {
             </h2>
             <div
               className="analytics-chart analytics-chart-tall"
-              role="img"
+              role="region"
+              tabIndex={0}
               aria-label={`${field} group median year differences`}
             >
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={rows}
-                  layout="vertical"
-                  margin={{ left: 10, right: 25 }}
-                >
-                  <CartesianGrid horizontal={false} />
-                  <XAxis type="number" />
-                  <YAxis
-                    type="category"
-                    dataKey="label"
-                    width={160}
-                    tick={{ fontSize: 12 }}
-                  />
-                  <Tooltip />
-                  <Bar
-                    dataKey="median_years"
-                    name="Median years"
-                    isAnimationActive={false}
+              <div className="chart-canvas">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={rows}
+                    layout="vertical"
+                    margin={{ left: 10, right: 25 }}
                   >
-                    {rows.map((row) => (
-                      <Cell
-                        key={`${row.name}-${row.content_type}`}
-                        fill={
-                          row.content_type === "Movie"
-                            ? DATA_COLORS.movie
-                            : DATA_COLORS.tv
-                        }
-                      />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+                    <CartesianGrid horizontal={false} />
+                    <XAxis type="number" />
+                    <YAxis
+                      type="category"
+                      dataKey="label"
+                      width={160}
+                      tick={{ fontSize: 12 }}
+                    />
+                    <Tooltip />
+                    <Bar
+                      dataKey="median_years"
+                      name="Median years"
+                      isAnimationActive={false}
+                    >
+                      {rows.map((row) => (
+                        <Cell
+                          key={`${row.name}-${row.content_type}`}
+                          fill={
+                            row.content_type === "Movie"
+                              ? DATA_COLORS.movie
+                              : DATA_COLORS.tv
+                          }
+                        />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
+            <p className="chart-scroll-hint">
+              Swipe the chart or focus it and use arrow keys to read all group
+              labels and values.
+            </p>
             <DataLegend
               label="Content type colors"
               items={[

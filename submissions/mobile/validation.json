@@ -1,0 +1,26 @@
+{
+  "verified_at": "2026-11-08T00:45:38+07:00",
+  "run_id": "20261106T131312231321Z",
+  "build": "passed",
+  "frontend_tests": "passed",
+  "source_web_sha256": {
+    "apps/web/src/app/App.tsx": "f3cf330a6a7ea914605abf4b20c74bbacd583d41fcdf2c9a64cbb695e14cbbfd",
+    "apps/web/src/app/useSectionNavigation.ts": "8a9803afcd3044ae7876163565f588b0370e3c252c35b4cff7e587d5f2cdc279",
+    "apps/web/src/app/useWorkspaceMotion.ts": "2a28816f00037836bf874728c4be20e21cea1db9685d05c952b1e51661d3e383",
+    "apps/web/src/components/DataLegend.tsx": "ec229137f7a6c898063ed78629031061b02c9d54244bf77d07744acea26c36d7",
+    "apps/web/src/components/Dataset.tsx": "c90ab728c1920a8f229023be2d2f044d14297c4a1fa33dff1ef8f0e93919e41b",
+    "apps/web/src/components/Shared.tsx": "f4f92dc419576c63f3a036f06d2bacc574f5bade840bcd7f86a6dfbb60eaa57d",
+    "apps/web/src/data-visualization.css": "5c62adc62094641425a49a47bbaaed731c6e7cdc3578b40de8239b6dd0eed33b",
+    "apps/web/src/features/task-06/Workspace.test.tsx": "0a0d927c68fc5983ecf26fdc82c378c9ba0fe93e0d18b70b46c5dc9fb252b53b",
+    "apps/web/src/features/task-06/Workspace.tsx": "355a453fda2a2e2b9edbad5e1d5f8612d2023ebea122f8868db7a6e4ec038716",
+    "apps/web/src/layout.css": "56119d0fac1e1884d0c64bb5d2fed995f9c59967122cd74e107fae8481937d6e",
+    "apps/web/src/lib/api.ts": "760948e9e221c55212d881adad64bb7bac93392d6bab9ed00d95b57deed8a9a8",
+    "apps/web/src/lib/dataColors.ts": "4342fab59cbab9f525bde061e76150105f3d4d90ef62022faf3bbf965744b90e",
+    "apps/web/src/lib/schema.d.ts": "1fbacd58ff72f497786f48ed0bd6b35aafa69fbc87b00c88554b1e2f4558a9da",
+    "apps/web/src/main.tsx": "178ab9b6425d0c2d1c665405d9bc2eefbcb4267df06b5efe9e378e32e6cffbf3",
+    "apps/web/src/mobile.css": "42d2b524501fc24883316f2c73774d33c8ffa54a4753655947378be10fff011e",
+    "apps/web/src/motion.css": "4873ffd03de73b58d299864aba3eaa56bd302ced9354cbeebc9fe0153dfe29ad",
+    "apps/web/src/styles.css": "d7c6dc063f900c5f56b70dd16b78aab8670fc9c22b89916894292dcbbd6849b1",
+    "apps/web/src/test-setup.ts": "475c7500129ce15530c7b8070b2838a840f96ac75ce83a0a413ef66ae24b5d64"
+  }
+}
