@@ -1,10 +1,10 @@
-# Historical Catalog Entry Analytics
+# Netflix Catalog Analytics
 
-Standalone Task 6 internship application. This repository contains only this task's React frontend, FastAPI backend, ML package and selected immutable artifact bundle. Other tasks are independent repositories.
+Independent machine learning portfolio project for historical entry analysis. Includes a React frontend, FastAPI backend, ML package and selected immutable artifact bundle.
 
 ## Status
 
-- Implemented: task workspace, About Dataset, audited variable rationale, actual preparation/split/segment outcomes, model evaluation and interactive results.
+- Implemented: project workspace, About Dataset, audited variable rationale, actual preparation/split/segment outcomes, model evaluation and interactive results.
 - Interface: responsive RawBlock layout with self-hosted fonts and semantic chart colors and labelled legends; see [verification and screenshots](docs/VERIFICATION.md).
 - Repository: independent application, model artifacts and verification workflow.
 - Active model run: `20261106T131312231321Z`. See `artifacts/task-06/active.json` for the current run.
@@ -13,7 +13,7 @@ Standalone Task 6 internship application. This repository contains only this tas
 
 ## Live application
 
-[Open Task 6](https://netflix-catalog-analytics.shafwan.digital) ? deployed with Docker, Nginx and HTTPS. [Production verification](submissions/deployment/production/verification.json).
+[Open application](https://netflix-catalog-analytics.shafwan.digital) - deployed with Docker, Nginx and HTTPS. [Production verification](submissions/deployment/production/verification.json).
 
 ## Quickstart
 
@@ -46,18 +46,20 @@ Training creates a new immutable run; regenerate the dataset profile whenever ac
 
 ## Structure and documentation
 
-- `apps/web`: single-task frontend; `/overview`, `/dataset`, task action, `/evaluation`, `/methodology`.
+- `apps/web`: project frontend; `/overview`, `/dataset`, project action, `/evaluation`, `/methodology`.
 - `apps/api`: HTTP validation, artifact serving and `/api/v1/dataset`.
-- `packages/ml`: shared utilities plus Task 6 only; serialized class paths retained for artifact compatibility.
+- `packages/ml`: shared utilities and project ML implementation; serialized class paths retained for artifact compatibility.
 - `artifacts/task-06`: one selected run, checksums and active pointer.
 - `reports/dataset-profile.json`: run-bound source, variables, decisions and intermediate outcomes.
 - [Standalone verification](docs/VERIFICATION.md)
 - [Docker / VPS deployment](docs/DEPLOYMENT.md)
 - [Architecture and deployment](docs/ARCHITECTURE.md)
-- [Task evidence and provenance](docs/tasks/task-06/)
+- [Experiment evidence and provenance](docs/tasks/task-06/)
 
 Independent educational project; not affiliated with Netflix. This is a historical 2021 catalog snapshot, not a current data service. Models describe metadata associations, not causation. Raw-data redistribution rights are not assumed.
 
 Data visualization: [semantic colors and accessibility](docs/architecture/data-visualization.md).
 
 Mobile layout: [responsive behavior and test replay](docs/architecture/mobile.md).
+
+- [Project identity and logo assets](docs/architecture/branding.md)

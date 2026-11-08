@@ -40,7 +40,7 @@ const scopeNote =
 function Heading({ section, children }: { section: string; children: string }) {
   return (
     <PageHeading
-      eyebrow={`TASK 06 / ${section.toUpperCase()}`}
+      eyebrow={`${section.toUpperCase()}`}
       title={children}
     >
       Historical Catalog Entry Analytics
@@ -278,7 +278,7 @@ function download(rows: CatalogInsight[], run: string, group: string) {
   );
   const a = document.createElement("a");
   a.href = url;
-  a.download = `task-06-insights-${group}-${run}.csv`;
+  a.download = `catalog-analytics-${group}-${run}.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }

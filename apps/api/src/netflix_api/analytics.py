@@ -163,7 +163,7 @@ def service(request):
     value = getattr(request.app.state, "analytics", None)
     if value is None:
         raise HTTPException(
-            503, detail="Validated Task 6 analytics artifacts unavailable. Run train_analytics.py first."
+            503, detail="Validated analytics artifacts unavailable. Run train_analytics.py first."
         )
     return value
 
