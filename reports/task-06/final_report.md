@@ -1,4 +1,4 @@
-# Task 6 — Historical Catalog Entry Analytics
+# Historical Catalog Entry Analytics
 
 Run `20261106T131312231321Z`. Selected **ridge_advanced_10** (advanced).
 

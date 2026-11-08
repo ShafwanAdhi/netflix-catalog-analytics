@@ -1,0 +1,18 @@
+{
+  "repository": "netflix-catalog-analytics",
+  "commit": "221a6f5e9581f518c5f45aaa97655983210cf6cc",
+  "runs": [
+    {
+      "name": "Verify standalone task",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/ShafwanAdhi/netflix-catalog-analytics/actions/runs/42465029643"
+    },
+    {
+      "name": "Container verification",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/ShafwanAdhi/netflix-catalog-analytics/actions/runs/42465029705"
+    }
+  ]
+}

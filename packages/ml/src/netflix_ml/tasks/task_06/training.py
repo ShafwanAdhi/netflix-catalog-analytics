@@ -315,7 +315,7 @@ def render_report(result):
     fig.tight_layout()
     fig.savefig(figures / "test-predictions.png", dpi=150)
     plt.close(fig)
-    text = f"# Task 6 — Historical Catalog Entry Analytics\n\nRun `{result['run_id']}`. Selected **{result['model_id']}** ({result['feature_set']}).\n\n"
+    text = f"# Historical Catalog Entry Analytics\n\nRun `{result['run_id']}`. Selected **{result['model_id']}** ({result['feature_set']}).\n\n"
     text += "Target is addition calendar year minus release year, not elapsed duration or commercial success. No release year or addition date is a predictor.\n\n"
     text += f"Audit: {result['audit']['entity_rows']} entities, {len(result['audit']['anomalies'])} negative anomalies excluded; {result['audit']['eligible_rows']} eligible, {result['audit']['train_rows']} training and {result['audit']['test_rows']} test. Snapshot {result['audit']['snapshot_date']}; 2021 is partial.\n\n"
     text += "## Frozen model comparison\n\n| Model | Features | CV MAE | Test MAE | RMSE | Median AE | R² |\n| --- | --- | ---: | ---: | ---: | ---: | ---: |\n"
