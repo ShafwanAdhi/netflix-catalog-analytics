@@ -24,6 +24,6 @@ Insights store sample/reference sizes, medians, difference, direction and limita
 
 ## Operation and limits
 
-Immutable bundles contain pipeline, source/config identity, configuration, manifests, selection, test predictions, audit, results and insights. Validate required files, checksums, run identity and scikit-learn version before activation/loading. Only trust project-generated joblib files; checksums do not establish arbitrary-file trust. Tasks load independently, without uploads or HTTP training.
+Immutable bundles contain pipeline, source/config identity, configuration, manifests, selection, test predictions, audit, results and insights. Validate required files, checksums, run identity and scikit-learn version before activation/loading. Only trust project-generated joblib files; checksums do not establish arbitrary-file trust. The service loads a validated model bundle without uploads or HTTP training.
 
 Removed titles and future additions are absent. TV release year may describe a season. Year granularity prevents precise durations; 2021 is partial. No current forecast, demand estimate, confidence interval or commercial outcome is claimed.
