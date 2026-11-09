@@ -2,7 +2,7 @@
 
 Model run `20261106T131312231321Z`. The recorded application revision is `221a6f5e9581f518c5f45aaa97655983210cf6cc`. [Evidence index](../verification/README.md) retains actual browser records, screenshots and deployment identity; documentation-only changes do not create new model results.
 
-## Recorded results
+## Previously recorded production results
 
 - Production frontend build passed.
 - Frontend tests: 4 passed; backend tests: 10 passed.
@@ -30,3 +30,7 @@ npx --yes --package @playwright/cli playwright-cli close
 ```
 
 Save new output under `output/playwright`, record the source revision and model run, and inspect the actual screenshots before publishing new verification records. Recorded results are not inferred from file presence.
+
+## Local portfolio revision
+
+The portfolio presentation update is tested separately from the production revision above. Its Overview narratives, searchable input controls, source provenance and initial sharing metadata use the same frozen model run. See [the local evidence index](../verification/portfolio/README.md) for checks, screenshots and the precise working-tree identity. These records do not imply that the revision has been published or deployed.

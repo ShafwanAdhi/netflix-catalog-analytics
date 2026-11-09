@@ -77,6 +77,9 @@ def create_app(load_model=True):
             requested = (web / path).resolve()
             if requested.is_relative_to(web.resolve()) and requested.is_file():
                 return FileResponse(requested)
+            route_html = requested / "index.html"
+            if route_html.is_relative_to(web.resolve()) and route_html.is_file():
+                return FileResponse(route_html)
             return FileResponse(web / "index.html")
 
     return app

@@ -322,6 +322,7 @@ export interface components {
         };
         /** DatasetInfo */
         DatasetInfo: {
+            provenance: components["schemas"]["Provenance"];
             /** Task Id */
             task_id: number;
             /** Title */
@@ -413,6 +414,54 @@ export interface components {
             metrics: {
                 [key: string]: number | null;
             };
+        };
+        /** Provenance */
+        Provenance: {
+            /** Origin */
+            origin: string;
+            /** Source Sha256 */
+            source_sha256: string;
+            /** Raw Rows */
+            raw_rows: number;
+            /** Raw Columns */
+            raw_columns: number;
+            /** Release Year Min */
+            release_year_min: number;
+            /** Release Year Max */
+            release_year_max: number;
+            /** Date Added Min */
+            date_added_min: string;
+            /** Date Added Max */
+            date_added_max: string;
+            /** Acquired At */
+            acquired_at: string | null;
+            /** Upstream Url */
+            upstream_url: string | null;
+            /** Upstream Version */
+            upstream_version: string | null;
+            /** License */
+            license: string | null;
+            /** Verification Status */
+            verification_status: string;
+            /** Redistribution Status */
+            redistribution_status: string;
+            /** Reviewed At */
+            reviewed_at: string;
+            /** Evidence */
+            evidence: components["schemas"]["ProvenanceEvidence"][];
+            /** Inference Reproduction */
+            inference_reproduction: string;
+            /** Training Reproduction */
+            training_reproduction: string;
+            /** Limitations */
+            limitations: string[];
+        };
+        /** ProvenanceEvidence */
+        ProvenanceEvidence: {
+            /** Url */
+            url: string;
+            /** Finding */
+            finding: string;
         };
         /** RegressionMetrics */
         RegressionMetrics: {

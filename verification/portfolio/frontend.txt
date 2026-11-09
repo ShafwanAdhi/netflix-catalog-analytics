@@ -1,0 +1,16 @@
+
+> netflix-catalog-analytics@ test D:\auspify-intern\standalone\netflix-catalog-analytics
+> pnpm --filter @lab/web test
+
+
+> @lab/web@0.1.0 test D:\auspify-intern\standalone\netflix-catalog-analytics\apps\web
+> vitest run
+
+
+ RUN  v4.1.12 D:/auspify-intern/standalone/netflix-catalog-analytics/apps/web
+
+
+ Test Files  3 passed (3)
+      Tests  7 passed (7)
+   Start at  12:36:44
+   Duration  4.21s (transform 382ms, setup 1.93s, import 1.71s, tests 1.60s, environment 4.92s)

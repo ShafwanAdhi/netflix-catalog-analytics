@@ -1,5 +1,7 @@
-import { useState } from "react";
-import { Link, useSearchParams } from "react-router";
+import { MultiSelect } from "../../components/MultiSelect";
+import { CaseStudy, useRunEvidence } from "../../components/CaseStudy";
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation, useSearchParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import { DATA_COLORS } from "../../lib/dataColors";
 import { DataLegend } from "../../components/DataLegend";
@@ -39,10 +41,7 @@ const scopeNote =
 
 function Heading({ section, children }: { section: string; children: string }) {
   return (
-    <PageHeading
-      eyebrow={`${section.toUpperCase()}`}
-      title={children}
-    >
+    <PageHeading eyebrow={`${section.toUpperCase()}`} title={children}>
       Historical Catalog Entry Analytics
     </PageHeading>
   );
@@ -58,11 +57,59 @@ function End({ run }: { run: string }) {
 
 export function AnalyticsOverview() {
   const { data, error, isPending } = useAnalytics();
-  if (!data) return <State error={error} loading={isPending} />;
+  const evidence = useRunEvidence(data?.run_id);
+  if (error || evidence.error) return <State error={error || evidence.error} />;
+  if (!data || evidence.pending)
+    return <State loading={isPending || evidence.pending} />;
   const total = data.summary.find((r) => r.group === "all")!;
   return (
     <>
-      <Heading section="Overview">Content success analytics engine</Heading>
+      <PageHeading
+        eyebrow="HISTORICAL CATALOG ANALYSIS"
+        title="Historical Catalog Entry Analytics"
+        action={
+          <Link className="button" to="/insights#estimate">
+            Try an estimate
+          </Link>
+        }
+      >
+        Examine the difference between release year and catalog-entry year,
+        using a historical metadata snapshot.
+      </PageHeading>
+      <CaseStudy
+        question="What metadata patterns accompany historical release-to-catalog year differences?"
+        finding={
+          <>
+            The CV-selected model achieved test MAE{" "}
+            <strong>{number(data.metrics.mae)} years</strong> versus{" "}
+            {number(data.quality.baseline_mae)} for the global median baseline,
+            across {data.quality.support.toLocaleString()} titles.
+          </>
+        }
+        decision="Exclude release year and date added from inputs because they construct the target. Select with chronological CV MAE; use test cohorts to diagnose, not reselect."
+        limitation={
+          <>
+            Median absolute error was{" "}
+            {number(data.metrics.median_absolute_error)} years versus{" "}
+            {number(
+              data.comparison.find((item) => item.model === "median_global")!
+                .test_metrics.median_absolute_error,
+            )}{" "}
+            for baseline. Lower mean error does not imply improvement for the
+            typical title. The greater-than-five-year target band has MAE{" "}
+            {number(
+              data.errors.find(
+                (item) => item.field === "target_band" && item.name === ">5",
+              )!.mae,
+            )}{" "}
+            years.
+          </>
+        }
+        coverage="Entity and anomaly review, descriptive cohort analysis, leakage exclusions, chronological regression, baseline comparisons, input-block permutation diagnostics and an exploratory estimator."
+        action="Explore patterns and estimate"
+        href="/insights#estimate"
+        run={data.run_id}
+      />
       <div className="summary-strip">
         <div>
           <strong>{data.audit.eligible_rows.toLocaleString()}</strong>
@@ -286,6 +333,26 @@ function download(rows: CatalogInsight[], run: string, group: string) {
 function EstimateForm({ data }: { data: AnalyticsResults }) {
   const [kind, setKind] = useState<"Movie" | "TV Show">("Movie");
   const [localError, setLocalError] = useState("");
+  const [countries, setCountries] = useState<string[]>([]);
+  const [genres, setGenres] = useState<string[]>([]);
+  const [duration, setDuration] = useState("");
+  const [director, setDirector] = useState("");
+  const [example, setExample] = useState("");
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const location = useLocation();
+  useEffect(() => {
+    if (location.hash !== "#estimate") return;
+    const frame = requestAnimationFrame(() => {
+      headingRef.current?.focus({ preventScroll: true });
+      headingRef.current?.scrollIntoView({
+        behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "instant"
+          : "smooth",
+        block: "start",
+      });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [location.hash]);
   const mutation = useMutation({
     mutationFn: (body: AnalyticsRequest) =>
       request<AnalyticsPrediction>("/tasks/6/predict", {
@@ -296,11 +363,47 @@ function EstimateForm({ data }: { data: AnalyticsResults }) {
   });
   return (
     <section className="analytics-section" id="estimate">
-      <h2>Estimate a historical year difference</h2>
+      <h2 id="estimate-heading" ref={headingRef} tabIndex={-1}>
+        Estimate a historical year difference
+      </h2>
       <p>
         Uses metadata patterns learned through 2019. Changing attributes
         explores model associations; it does not estimate an intervention
         effect.
+      </p>
+      <div className="example-buttons">
+        <span>Example input</span>
+        {(["Movie", "TV Show"] as const).map((type) => (
+          <button
+            type="button"
+            key={type}
+            onClick={() => {
+              setKind(type);
+              setDuration(type === "Movie" ? "100" : "2");
+              setCountries(["United States"]);
+              setGenres([type === "Movie" ? "Dramas" : "TV Dramas"]);
+              setDirector("");
+              setLocalError("");
+              mutation.reset();
+              setExample(
+                `${type} example loaded. Illustrative metadata, not evidence of generalization.`,
+              );
+            }}
+          >
+            {type}
+          </button>
+        ))}
+      </div>
+      {example && (
+        <p role="status" className="example-note">
+          {example}
+        </p>
+      )}
+      <p className="table-note">
+        Frozen test MAE: {number(data.metrics.mae)} years; global-median
+        baseline: {number(data.quality.baseline_mae)}. Mean error can hide much
+        larger errors for older catalog entries. See Evaluation for cohort and
+        median-error tradeoffs.
       </p>
       <div className="predict-grid">
         <form
@@ -313,18 +416,22 @@ function EstimateForm({ data }: { data: AnalyticsResults }) {
             setLocalError("");
             mutation.reset();
             const values = new FormData(e.currentTarget);
-            const duration = Number(values.get("duration"));
-            if (!Number.isInteger(duration) || duration <= 0) {
+            const durationValue = Number(duration);
+            if (!Number.isInteger(durationValue) || durationValue <= 0) {
               setLocalError("Enter a positive whole-number duration.");
+              return;
+            }
+            if (!genres.length) {
+              setLocalError("Select at least one genre.");
               return;
             }
             mutation.mutate({
               content_type: kind,
-              countries: values.getAll("countries").map(String),
-              genres: values.getAll("genres").map(String),
+              countries,
+              genres,
               director: String(values.get("director") || "") || null,
               duration: {
-                value: duration,
+                value: durationValue,
                 unit: kind === "Movie" ? "minutes" : "seasons",
               },
             });
@@ -336,6 +443,8 @@ function EstimateForm({ data }: { data: AnalyticsResults }) {
               value={kind}
               onChange={(e) => {
                 setKind(e.target.value as typeof kind);
+                setDuration("");
+                setExample("");
                 mutation.reset();
               }}
             >
@@ -351,29 +460,44 @@ function EstimateForm({ data }: { data: AnalyticsResults }) {
               min="1"
               step="1"
               required
-              key={kind}
+              value={duration}
+              onChange={(event) => setDuration(event.target.value)}
             />
           </label>
-          <label>
-            Countries
-            <select name="countries" multiple size={4}>
-              {data.countries.map((v) => (
-                <option key={v}>{v}</option>
-              ))}
-            </select>
-            <small>Ctrl / Command for multiple. Leave empty for unknown.</small>
-          </label>
-          <label>
-            Genres
-            <select name="genres" multiple size={4} required>
-              {data.genres.map((v) => (
-                <option key={v}>{v}</option>
-              ))}
-            </select>
-          </label>
+          <MultiSelect
+            label="Countries"
+            options={data.countries}
+            value={countries}
+            unknown
+            onChange={(values) => {
+              setCountries(values);
+              mutation.reset();
+              setLocalError("");
+            }}
+          />
+          <MultiSelect
+            label="Genres"
+            options={data.genres}
+            value={genres}
+            error={
+              localError === "Select at least one genre."
+                ? localError
+                : undefined
+            }
+            onChange={(values) => {
+              setGenres(values);
+              mutation.reset();
+              setLocalError("");
+            }}
+          />
           <label>
             Director (optional)
-            <input name="director" maxLength={500} />
+            <input
+              name="director"
+              maxLength={500}
+              value={director}
+              onChange={(event) => setDirector(event.target.value)}
+            />
             <small>
               Only the number of listed directors and missingness are used.
             </small>

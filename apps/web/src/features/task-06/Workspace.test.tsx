@@ -30,7 +30,8 @@ const data = {
   genres: ["Dramas"],
   breakdown: [row],
   insights: { all: [row], movies: [row], tv: [] },
-  quality: {},
+  quality: { baseline_mae: 4.97 },
+  metrics: { mae: 4.36 },
   audit: {},
   summary: [],
 } as unknown as AnalyticsResults;
@@ -101,9 +102,13 @@ describe("Task 6 insights", () => {
       screen.getByRole("spinbutton", { name: "Duration (minutes)" }),
       { target: { value: "100" } },
     );
-    fireEvent.change(screen.getByRole("listbox", { name: "Genres" }), {
-      target: { value: "Dramas" },
-    });
+    fireEvent.click(
+      screen.getByRole("button", { name: /Genres.*Select one or more/ }),
+    );
+    fireEvent.click(
+      await screen.findByRole("checkbox", { name: "Dramas" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Done" }));
     fireEvent.click(
       screen.getByRole("button", { name: "Estimate year difference" }),
     );
